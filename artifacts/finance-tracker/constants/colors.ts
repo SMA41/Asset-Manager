@@ -1,82 +1,82 @@
 const colors = {
   light: {
-    text: "#0B1220",
-    tint: "#0B7A55",
+    text: "#0A1A2F",
+    tint: "#047857",
 
-    background: "#F7F8FA",
-    foreground: "#0B1220",
+    background: "#F4F6FA",
+    foreground: "#0A1A2F",
 
     card: "#FFFFFF",
-    cardForeground: "#0B1220",
+    cardForeground: "#0A1A2F",
 
     elevated: "#FFFFFF",
 
-    primary: "#10B981",
+    primary: "#059669",
     primaryForeground: "#FFFFFF",
 
-    secondary: "#EEF2F1",
-    secondaryForeground: "#0B1220",
+    secondary: "#E8EEF4",
+    secondaryForeground: "#0A1A2F",
 
-    muted: "#F0F2F5",
-    mutedForeground: "#6B7280",
+    muted: "#EDF1F6",
+    mutedForeground: "#5B6776",
 
-    accent: "#E6F7F1",
-    accentForeground: "#0B7A55",
+    accent: "#DBF6EA",
+    accentForeground: "#047857",
 
-    success: "#10B981",
-    danger: "#EF4444",
-    warning: "#F59E0B",
-    info: "#3B82F6",
+    success: "#059669",
+    danger: "#DC2626",
+    warning: "#D97706",
+    info: "#2563EB",
 
-    destructive: "#EF4444",
+    destructive: "#DC2626",
     destructiveForeground: "#FFFFFF",
 
-    border: "#E5E7EB",
-    input: "#E5E7EB",
+    border: "#D8DEE7",
+    input: "#D8DEE7",
 
-    chart1: "#10B981",
-    chart2: "#3B82F6",
-    chart3: "#F59E0B",
-    chart4: "#8B5CF6",
-    chart5: "#EF4444",
+    chart1: "#059669",
+    chart2: "#2563EB",
+    chart3: "#D97706",
+    chart4: "#7C3AED",
+    chart5: "#DC2626",
   },
 
   dark: {
-    text: "#F4F6F8",
+    text: "#EDF1F7",
     tint: "#34D399",
 
-    background: "#0A0F14",
-    foreground: "#F4F6F8",
+    background: "#070B11",
+    foreground: "#EDF1F7",
 
-    card: "#121821",
-    cardForeground: "#F4F6F8",
+    card: "#10161F",
+    cardForeground: "#EDF1F7",
 
-    elevated: "#1A222D",
+    elevated: "#171F2A",
 
-    primary: "#34D399",
-    primaryForeground: "#06120D",
+    primary: "#10B981",
+    primaryForeground: "#03110B",
 
-    secondary: "#1A222D",
-    secondaryForeground: "#F4F6F8",
+    secondary: "#171F2A",
+    secondaryForeground: "#EDF1F7",
 
-    muted: "#161D26",
-    mutedForeground: "#8A95A3",
+    muted: "#131A24",
+    mutedForeground: "#9AA5B5",
 
-    accent: "#0F2A22",
+    accent: "#0E2A20",
     accentForeground: "#34D399",
 
-    success: "#34D399",
+    success: "#10B981",
     danger: "#F87171",
     warning: "#FBBF24",
     info: "#60A5FA",
 
     destructive: "#F87171",
-    destructiveForeground: "#0A0F14",
+    destructiveForeground: "#070B11",
 
-    border: "#222B36",
-    input: "#222B36",
+    border: "#222B38",
+    input: "#222B38",
 
-    chart1: "#34D399",
+    chart1: "#10B981",
     chart2: "#60A5FA",
     chart3: "#FBBF24",
     chart4: "#A78BFA",
