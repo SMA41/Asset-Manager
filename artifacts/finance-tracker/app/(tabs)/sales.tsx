@@ -18,6 +18,8 @@ import { useData } from "@/contexts/DataContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useColors } from "@/hooks/useColors";
 import { deleteSale } from "@/services/firebaseService";
+import { confirm } from "@/utils/confirm";
+import { buildCsv, exportCsv } from "@/utils/exportCsv";
 import { formatCurrency, formatDateTime, monthKey } from "@/utils/format";
 import { Sale } from "@/types";
 
@@ -36,18 +38,41 @@ export default function SalesScreen() {
     };
   }, [sales]);
 
-  const onDelete = (s: Sale) => {
-    Alert.alert("Delete sale", "This won't restore stock. Continue?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          if (!user) return;
-          await deleteSale(user.uid, s.id);
-        },
-      },
-    ]);
+  const onDelete = async (s: Sale) => {
+    const ok = await confirm({
+      title: "Delete sale",
+      message: "This won't restore stock. Continue?",
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok || !user) return;
+    try {
+      await deleteSale(user.uid, s.id);
+    } catch (err: any) {
+      Alert.alert("Couldn't delete", err?.message ?? "Please try again.");
+    }
+  };
+
+  const onExport = async () => {
+    if (sales.length === 0) {
+      Alert.alert("Nothing to export", "Record a sale first.");
+      return;
+    }
+    try {
+      const csv = buildCsv(sales, [
+        { header: "Date", get: (s) => new Date(s.date).toISOString() },
+        { header: "Product", get: (s) => s.productName },
+        { header: "Quantity", get: (s) => s.quantity },
+        { header: "Unit price", get: (s) => s.unitPrice.toFixed(2) },
+        { header: "Unit cost", get: (s) => s.unitCost.toFixed(2) },
+        { header: "Revenue", get: (s) => s.revenue.toFixed(2) },
+        { header: "Profit", get: (s) => s.profit.toFixed(2) },
+      ]);
+      const stamp = new Date().toISOString().slice(0, 10);
+      await exportCsv(`sales-${stamp}.csv`, csv);
+    } catch (err: any) {
+      Alert.alert("Export failed", err?.message ?? "Please try again.");
+    }
   };
 
   return (
@@ -58,6 +83,8 @@ export default function SalesScreen() {
         rightIcon="plus"
         rightLabel="New"
         onRightPress={() => router.push("/sale/new")}
+        secondaryIcon="download"
+        onSecondaryPress={onExport}
       />
 
       <FlatList

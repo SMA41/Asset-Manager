@@ -22,6 +22,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useColors } from "@/hooks/useColors";
 import { deleteExpense } from "@/services/firebaseService";
 import { confirm } from "@/utils/confirm";
+import { buildCsv, exportCsv } from "@/utils/exportCsv";
 import { formatCurrency, formatDate, monthKey, monthLabel } from "@/utils/format";
 import { CATEGORY_ICONS } from "@/constants/categories";
 import { Expense } from "@/types";
@@ -82,6 +83,25 @@ export default function ExpensesScreen() {
     }
   };
 
+  const onExport = async () => {
+    if (filtered.length === 0) {
+      Alert.alert("Nothing to export", "No expenses for this month.");
+      return;
+    }
+    try {
+      const csv = buildCsv(filtered, [
+        { header: "Date", get: (e) => new Date(e.date).toISOString() },
+        { header: "Title", get: (e) => e.title },
+        { header: "Category", get: (e) => e.category },
+        { header: "Amount", get: (e) => e.amount.toFixed(2) },
+        { header: "Note", get: (e) => e.note ?? "" },
+      ]);
+      await exportCsv(`expenses-${activeMonth}.csv`, csv);
+    } catch (err: any) {
+      Alert.alert("Export failed", err?.message ?? "Please try again.");
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
       <AppHeader
@@ -90,6 +110,8 @@ export default function ExpensesScreen() {
         rightIcon="plus"
         rightLabel="New"
         onRightPress={() => router.push("/expense/new")}
+        secondaryIcon="download"
+        onSecondaryPress={onExport}
       />
 
       <ScrollView

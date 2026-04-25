@@ -10,12 +10,16 @@ export function AppHeader({
   rightIcon,
   onRightPress,
   rightLabel,
+  secondaryIcon,
+  onSecondaryPress,
 }: {
   title: string;
   subtitle?: string;
   rightIcon?: keyof typeof Feather.glyphMap;
   onRightPress?: () => void;
   rightLabel?: string;
+  secondaryIcon?: keyof typeof Feather.glyphMap;
+  onSecondaryPress?: () => void;
 }) {
   const c = useColors();
   const insets = useSafeAreaInsets();
@@ -39,6 +43,21 @@ export function AppHeader({
         ) : null}
         <Text style={[styles.title, { color: c.foreground }]}>{title}</Text>
       </View>
+      {secondaryIcon ? (
+        <Pressable
+          onPress={onSecondaryPress}
+          style={({ pressed }) => [
+            styles.iconBtn,
+            {
+              backgroundColor: c.muted,
+              borderColor: c.border,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <Feather name={secondaryIcon} size={18} color={c.foreground} />
+        </Pressable>
+      ) : null}
       {rightIcon ? (
         <Pressable
           onPress={onRightPress}
@@ -92,5 +111,13 @@ const styles = StyleSheet.create({
   rightLabel: {
     fontFamily: "Inter_600SemiBold",
     fontSize: 14,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
   },
 });
