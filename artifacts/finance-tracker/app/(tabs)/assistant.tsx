@@ -28,6 +28,7 @@ import {
   deleteReport,
 } from "@/services/firebaseService";
 import { ChatMessage } from "@/types";
+import { confirm } from "@/utils/confirm";
 import { formatCurrency, formatDateTime } from "@/utils/format";
 
 type Tab = "chat" | "reports";
@@ -79,21 +80,23 @@ export default function AssistantScreen() {
     }
   };
 
-  const handleClearChat = () => {
+  const handleClearChat = async () => {
     if (!user || messages.length === 0) return;
-    Alert.alert("Clear conversation", "Delete all messages with the assistant?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Clear",
-        style: "destructive",
-        onPress: async () => {
-          await clearChat(
-            user.uid,
-            messages.map((m) => m.id)
-          );
-        },
-      },
-    ]);
+    const ok = await confirm({
+      title: "Clear conversation",
+      message: "Delete all messages with the assistant?",
+      confirmLabel: "Clear",
+      destructive: true,
+    });
+    if (!ok) return;
+    try {
+      await clearChat(
+        user.uid,
+        messages.map((m) => m.id)
+      );
+    } catch (err: any) {
+      Alert.alert("Couldn't clear chat", err?.message ?? "Please try again.");
+    }
   };
 
   const handleGenerateReport = async () => {
@@ -114,16 +117,20 @@ export default function AssistantScreen() {
     }
   };
 
-  const handleDeleteReport = (id: string) => {
+  const handleDeleteReport = async (id: string) => {
     if (!user) return;
-    Alert.alert("Delete report", "This report will be removed.", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => deleteReport(user.uid, id),
-      },
-    ]);
+    const ok = await confirm({
+      title: "Delete report",
+      message: "This report will be removed.",
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
+    try {
+      await deleteReport(user.uid, id);
+    } catch (err: any) {
+      Alert.alert("Couldn't delete report", err?.message ?? "Please try again.");
+    }
   };
 
   return (

@@ -15,10 +15,13 @@ import { AppHeader } from "@/components/AppHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/Button";
 import { StatCard } from "@/components/StatCard";
+import { BarChart, BarDatum } from "@/components/BarChart";
+import { SectionHeader } from "@/components/SectionHeader";
 import { useData } from "@/contexts/DataContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useColors } from "@/hooks/useColors";
 import { deleteExpense } from "@/services/firebaseService";
+import { confirm } from "@/utils/confirm";
 import { formatCurrency, formatDate, monthKey, monthLabel } from "@/utils/format";
 import { CATEGORY_ICONS } from "@/constants/categories";
 import { Expense } from "@/types";
@@ -44,18 +47,39 @@ export default function ExpensesScreen() {
   const total = filtered.reduce((a, e) => a + e.amount, 0);
   const budget = budgets.find((b) => b.month === activeMonth)?.amount ?? null;
 
-  const onDelete = (e: Expense) => {
-    Alert.alert("Delete expense", `Remove ${e.title}?`, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          if (!user) return;
-          await deleteExpense(user.uid, e.id);
-        },
-      },
-    ]);
+  const last14 = useMemo<BarDatum[]>(() => {
+    const days: BarDatum[] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const start = d.getTime();
+      const end = start + 24 * 60 * 60 * 1000;
+      const v = expenses
+        .filter((e) => e.date >= start && e.date < end)
+        .reduce((a, e) => a + e.amount, 0);
+      days.push({
+        label: String(d.getDate()),
+        value: v,
+      });
+    }
+    return days;
+  }, [expenses]);
+
+  const onDelete = async (e: Expense) => {
+    const ok = await confirm({
+      title: "Delete expense",
+      message: `Remove ${e.title}?`,
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok || !user) return;
+    try {
+      await deleteExpense(user.uid, e.id);
+    } catch (err: any) {
+      Alert.alert("Couldn't delete", err?.message ?? "Please try again.");
+    }
   };
 
   return (
@@ -139,6 +163,26 @@ export default function ExpensesScreen() {
                 </Text>
               </View>
             )}
+            <View
+              style={[
+                styles.card,
+                { backgroundColor: c.card, borderColor: c.border, borderRadius: c.radius },
+              ]}
+            >
+              <SectionHeader
+                title="Spending · last 14 days"
+                subtitle={`Total ${formatCurrency(last14.reduce((a, b) => a + b.value, 0))}`}
+              />
+              {last14.some((d) => d.value > 0) ? (
+                <BarChart data={last14} formatValue={formatCurrency} height={140} />
+              ) : (
+                <View style={{ paddingVertical: 16 }}>
+                  <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", textAlign: "center" }}>
+                    No expenses in the last two weeks.
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
         }
         ListEmptyComponent={
@@ -232,4 +276,9 @@ const styles = StyleSheet.create({
   name: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
   meta: { fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 2 },
   amount: { fontFamily: "Inter_700Bold", fontSize: 15 },
+  card: {
+    padding: 16,
+    borderWidth: 1,
+    gap: 4,
+  },
 });

@@ -31,9 +31,10 @@ export function Input({
         style={[
           styles.field,
           {
-            backgroundColor: c.card,
+            backgroundColor: c.muted,
             borderColor: error ? c.destructive : focused ? c.primary : c.border,
             borderRadius: c.radius,
+            borderWidth: focused ? 1.5 : 1,
           },
         ]}
       >

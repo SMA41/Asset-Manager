@@ -16,6 +16,7 @@ import { StatCard } from "@/components/StatCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { BarChart, BarDatum } from "@/components/BarChart";
+import { LineChart, LinePoint } from "@/components/LineChart";
 import { CategoryBreakdown } from "@/components/CategoryBreakdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
@@ -34,8 +35,9 @@ export default function DashboardScreen() {
     [products, sales, expenses, budgets]
   );
 
-  const last7 = useMemo<BarDatum[]>(() => {
-    const days: BarDatum[] = [];
+  const { last7Revenue, last7Profit } = useMemo(() => {
+    const rev: BarDatum[] = [];
+    const prof: LinePoint[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     for (let i = 6; i >= 0; i--) {
@@ -43,16 +45,18 @@ export default function DashboardScreen() {
       d.setDate(today.getDate() - i);
       const start = d.getTime();
       const end = start + 24 * 60 * 60 * 1000;
-      const dayRevenue = sales
-        .filter((s) => s.date >= start && s.date < end)
-        .reduce((a, s) => a + s.revenue, 0);
-      days.push({
-        label: d.toLocaleDateString(undefined, { weekday: "narrow" }),
-        value: dayRevenue,
-      });
+      const daySales = sales.filter((s) => s.date >= start && s.date < end);
+      const dayRev = daySales.reduce((a, s) => a + s.revenue, 0);
+      const dayCogs = daySales.reduce((a, s) => a + (s.unitCost ?? 0) * (s.quantity ?? 0), 0);
+      const dayExp = expenses
+        .filter((e) => e.date >= start && e.date < end)
+        .reduce((a, e) => a + e.amount, 0);
+      const label = d.toLocaleDateString(undefined, { weekday: "narrow" });
+      rev.push({ label, value: dayRev });
+      prof.push({ label, value: dayRev - dayCogs - dayExp });
     }
-    return days;
-  }, [sales]);
+    return { last7Revenue: rev, last7Profit: prof };
+  }, [sales, expenses]);
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -162,14 +166,41 @@ export default function DashboardScreen() {
         >
           <SectionHeader
             title="Revenue · last 7 days"
-            subtitle={`Total ${formatCurrency(last7.reduce((a, b) => a + b.value, 0))}`}
+            subtitle={`Total ${formatCurrency(last7Revenue.reduce((a, b) => a + b.value, 0))}`}
           />
-          {last7.some((d) => d.value > 0) ? (
-            <BarChart data={last7} formatValue={formatCurrency} />
+          {last7Revenue.some((d) => d.value > 0) ? (
+            <BarChart data={last7Revenue} formatValue={formatCurrency} />
           ) : (
             <View style={{ paddingVertical: 24 }}>
               <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", textAlign: "center" }}>
                 No sales in the last week yet.
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Profit trend chart */}
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: c.card, borderColor: c.border, borderRadius: c.radius },
+          ]}
+        >
+          <SectionHeader
+            title="Profit trend · last 7 days"
+            subtitle={`Net ${formatCurrency(last7Profit.reduce((a, b) => a + b.value, 0))}`}
+          />
+          {last7Profit.some((d) => d.value !== 0) ? (
+            <LineChart
+              data={last7Profit}
+              formatValue={formatCurrency}
+              positiveColor={c.success}
+              negativeColor={c.danger}
+            />
+          ) : (
+            <View style={{ paddingVertical: 24 }}>
+              <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", textAlign: "center" }}>
+                Log a sale or expense to see your profit trend.
               </Text>
             </View>
           )}

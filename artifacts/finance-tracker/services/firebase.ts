@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, inMemoryPersistence, setPersistence } from "firebase/auth";
 import { initializeFirestore, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -15,6 +15,9 @@ const firebaseConfig = {
 export const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 export const auth = getAuth(firebaseApp);
+
+setPersistence(auth, inMemoryPersistence).catch(() => {
+});
 
 let _db: ReturnType<typeof getFirestore>;
 try {
