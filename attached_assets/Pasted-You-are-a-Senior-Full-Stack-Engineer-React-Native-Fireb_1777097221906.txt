@@ -1,0 +1,152 @@
+You are a Senior Full Stack Engineer (React Native + Firebase + AI SaaS Architect).
+
+Build a production-ready AI-powered Finance Tracking Mobile App using React Native (Expo + TypeScript).
+
+📱 App Goal
+
+Create a SaaS-level mobile app that allows users to:
+
+Manage products (buy/sell)
+Track sales and revenue
+Track expenses and budgets
+Automatically calculate profit/loss
+Generate AI-powered financial insights and summaries
+
+This app should behave like a:
+
+“Personal AI Accountant for small businesses”
+
+⚙️ Tech Stack
+React Native (Expo + TypeScript)
+Firebase (Firestore + Auth)
+Recharts / Victory Native (charts)
+AI API (Gemini)
+Use environment variables:
+process.env.EXPO_PUBLIC_FIREBASE_API_KEY
+process.env.EXPO_PUBLIC_AI_API_KEY
+Secure Firestore with user-based rules
+Each user can only access their own data
+🗄️ Database Structure (Firestore)
+
+Use this structure:
+
+users/{userId}
+products/
+sales/
+expenses/
+budgets/
+ai_reports/
+ai_chat/
+etc(what needed)
+🧱 Core Features
+📦 Product Management
+Add/Edit/Delete products
+Fields: name, costPrice, sellingPrice, stock
+💰 Sales System
+Record sales
+Auto update stock
+Calculate revenue and profit
+💸 Expense Tracking
+Add expenses with categories
+Monthly filtering
+📊 Dashboard
+Total revenue
+Total expenses
+Net profit/loss
+Budget vs actual
+Charts + summary cards
+📈 Budget System
+Set monthly budget
+Show warnings if exceeded
+🤖 AI Module (CRITICAL FEATURE)
+1. Generate Report
+
+Button → “Generate AI Report”
+
+Send structured JSON:
+
+{
+  "sales": [...],
+  "expenses": [...],
+  "products": [...],
+  "profit": number
+}
+2. AI Prompt (Internal)
+
+Act as a financial advisor. Analyze the provided business data and return:
+
+Profit/loss summary
+Spending insights
+Business performance
+Suggestions for improvement
+
+Keep response simple and human-friendly.
+
+3. AI Features
+AI summary screen
+AI chat assistant
+Save results in ai_reports
+🎨 UI/UX
+Modern fintech design
+Clean cards + dashboard layout
+Bottom tab navigation:
+Dashboard
+Products
+Sales
+Expenses
+AI Assistant
+Dark/Light mode
+📁 Project Structure
+/components
+/screens
+/services
+firebaseService.ts
+aiService.ts
+/store (Zustand)
+/hooks
+/utils
+⚡ Advanced Requirements
+Real-time Firestore updates
+Optimized queries
+Error handling
+Loading states
+Offline caching (basic)
+Clean reusable components
+🚀 Final Output Expectation
+Full working React Native app
+Clean, scalable architecture
+Production-level code (not demo)
+Ready to deploy on Play Store
+💡 Important Note (From Me)
+
+For your real project:
+
+Use .env file:
+firebase api key
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAXup7C1DVX8jem5mvCdd2XkVcjAm6D320",
+  authDomain: "expence-app-5c590.firebaseapp.com",
+  projectId: "expence-app-5c590",
+  storageBucket: "expence-app-5c590.firebasestorage.app",
+  messagingSenderId: "1094829916065",
+  appId: "1:1094829916065:web:7a62bd8079d116fc9b95e0",
+  measurementId: "G-L5NYTPY0FL"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+
+gemeni ai key
+AIzaSyBHywE0yGnYxTANcTSv-Ve0EsRHVkMQpMs
