@@ -49,6 +49,8 @@ export default function ProductsScreen() {
         rightIcon="plus"
         rightLabel="New"
         onRightPress={() => router.push("/product/new")}
+        secondaryIcon="upload"
+        onSecondaryPress={() => router.push("/bulk-products")}
       />
       <FlatList
         data={products}

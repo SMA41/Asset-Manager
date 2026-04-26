@@ -17,6 +17,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { DataProvider } from "@/contexts/DataContext";
+import { PlanProvider } from "@/contexts/PlanContext";
 import { AuthGate } from "@/components/AuthGate";
 import { useColors } from "@/hooks/useColors";
 
@@ -58,9 +59,11 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <AuthProvider>
-                <DataProvider>
-                  <ThemedShell />
-                </DataProvider>
+                <PlanProvider>
+                  <DataProvider>
+                    <ThemedShell />
+                  </DataProvider>
+                </PlanProvider>
               </AuthProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>

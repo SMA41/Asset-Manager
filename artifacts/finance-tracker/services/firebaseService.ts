@@ -23,6 +23,10 @@ import {
   Budget,
   AIReport,
   ChatMessage,
+  Customer,
+  Invoice,
+  InvoiceItem,
+  InvoiceStatus,
 } from "@/types";
 
 function userCol(userId: string, name: string) {
@@ -63,6 +67,18 @@ export async function createProduct(
     ...data,
     createdAt: serverTimestamp(),
   });
+}
+
+export async function createProductsBulk(
+  userId: string,
+  items: Array<Omit<Product, "id" | "createdAt">>
+) {
+  const batch = writeBatch(db);
+  for (const it of items) {
+    const ref = doc(userCol(userId, "products"));
+    batch.set(ref, { ...it, createdAt: serverTimestamp() });
+  }
+  await batch.commit();
 }
 
 export async function updateProduct(
@@ -278,6 +294,157 @@ export async function clearChat(userId: string, ids: string[]) {
   const batch = writeBatch(db);
   ids.forEach((id) => batch.delete(userDoc(userId, "ai_chat", id)));
   await batch.commit();
+}
+
+// ===== Customers =====
+export function subscribeCustomers(
+  userId: string,
+  cb: (items: Customer[]) => void
+): Unsubscribe {
+  const q = query(userCol(userId, "customers"), orderBy("createdAt", "desc"));
+  return onSnapshot(q, (snap) => {
+    const items: Customer[] = snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        name: data.name ?? "",
+        email: data.email ?? "",
+        phone: data.phone ?? "",
+        notes: data.notes ?? "",
+        createdAt: tsToMillis(data.createdAt),
+      };
+    });
+    cb(items);
+  });
+}
+
+export async function createCustomer(
+  userId: string,
+  data: Omit<Customer, "id" | "createdAt">
+) {
+  const ref = await addDoc(userCol(userId, "customers"), {
+    ...data,
+    createdAt: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+export async function updateCustomer(
+  userId: string,
+  id: string,
+  data: Partial<Omit<Customer, "id" | "createdAt">>
+) {
+  await updateDoc(userDoc(userId, "customers", id), data as any);
+}
+
+export async function deleteCustomer(userId: string, id: string) {
+  await deleteDoc(userDoc(userId, "customers", id));
+}
+
+export async function getCustomer(userId: string, id: string): Promise<Customer | null> {
+  const snap = await getDoc(userDoc(userId, "customers", id));
+  if (!snap.exists()) return null;
+  const data = snap.data();
+  return {
+    id: snap.id,
+    name: data.name ?? "",
+    email: data.email ?? "",
+    phone: data.phone ?? "",
+    notes: data.notes ?? "",
+    createdAt: tsToMillis(data.createdAt),
+  };
+}
+
+// ===== Invoices =====
+export function subscribeInvoices(
+  userId: string,
+  cb: (items: Invoice[]) => void
+): Unsubscribe {
+  const q = query(userCol(userId, "invoices"), orderBy("createdAt", "desc"));
+  return onSnapshot(q, (snap) => {
+    const items: Invoice[] = snap.docs.map((d) => {
+      const data = d.data();
+      const items = Array.isArray(data.items) ? (data.items as InvoiceItem[]) : [];
+      return {
+        id: d.id,
+        number: data.number ?? "",
+        customerId: data.customerId ?? "",
+        customerName: data.customerName ?? "",
+        items: items.map((it) => ({
+          description: it.description ?? "",
+          quantity: Number(it.quantity ?? 0),
+          unitPrice: Number(it.unitPrice ?? 0),
+        })),
+        subtotal: Number(data.subtotal ?? 0),
+        tax: Number(data.tax ?? 0),
+        total: Number(data.total ?? 0),
+        status: (data.status as InvoiceStatus) ?? "draft",
+        issueDate: tsToMillis(data.issueDate),
+        dueDate: tsToMillis(data.dueDate),
+        paidAt: data.paidAt ? tsToMillis(data.paidAt) : null,
+        notes: data.notes ?? "",
+        createdAt: tsToMillis(data.createdAt),
+      };
+    });
+    cb(items);
+  });
+}
+
+export async function createInvoice(
+  userId: string,
+  data: Omit<Invoice, "id" | "createdAt">
+) {
+  const ref = await addDoc(userCol(userId, "invoices"), {
+    ...data,
+    issueDate: Timestamp.fromMillis(data.issueDate),
+    dueDate: Timestamp.fromMillis(data.dueDate),
+    paidAt: data.paidAt ? Timestamp.fromMillis(data.paidAt) : null,
+    createdAt: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+export async function updateInvoiceStatus(
+  userId: string,
+  id: string,
+  status: InvoiceStatus,
+  paidAt?: number | null
+) {
+  await updateDoc(userDoc(userId, "invoices", id), {
+    status,
+    paidAt: paidAt ? Timestamp.fromMillis(paidAt) : null,
+  });
+}
+
+export async function deleteInvoice(userId: string, id: string) {
+  await deleteDoc(userDoc(userId, "invoices", id));
+}
+
+export async function getInvoice(userId: string, id: string): Promise<Invoice | null> {
+  const snap = await getDoc(userDoc(userId, "invoices", id));
+  if (!snap.exists()) return null;
+  const data = snap.data();
+  const items = Array.isArray(data.items) ? (data.items as InvoiceItem[]) : [];
+  return {
+    id: snap.id,
+    number: data.number ?? "",
+    customerId: data.customerId ?? "",
+    customerName: data.customerName ?? "",
+    items: items.map((it) => ({
+      description: it.description ?? "",
+      quantity: Number(it.quantity ?? 0),
+      unitPrice: Number(it.unitPrice ?? 0),
+    })),
+    subtotal: Number(data.subtotal ?? 0),
+    tax: Number(data.tax ?? 0),
+    total: Number(data.total ?? 0),
+    status: (data.status as InvoiceStatus) ?? "draft",
+    issueDate: tsToMillis(data.issueDate),
+    dueDate: tsToMillis(data.dueDate),
+    paidAt: data.paidAt ? tsToMillis(data.paidAt) : null,
+    notes: data.notes ?? "",
+    createdAt: tsToMillis(data.createdAt),
+  };
 }
 
 // ===== helpers =====

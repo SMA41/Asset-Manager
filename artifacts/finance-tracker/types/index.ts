@@ -48,3 +48,45 @@ export type ChatMessage = {
   content: string;
   createdAt: number;
 };
+
+export type Plan = "free" | "pro";
+
+export type UserProfile = {
+  plan: Plan;
+  upgradedAt?: number | null;
+  businessName?: string;
+};
+
+export type Customer = {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  notes?: string;
+  createdAt: number;
+};
+
+export type InvoiceItem = {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue";
+
+export type Invoice = {
+  id: string;
+  number: string;
+  customerId: string;
+  customerName: string;
+  items: InvoiceItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  status: InvoiceStatus;
+  issueDate: number;
+  dueDate: number;
+  paidAt?: number | null;
+  notes?: string;
+  createdAt: number;
+};

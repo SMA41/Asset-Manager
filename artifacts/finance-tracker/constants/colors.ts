@@ -1,27 +1,27 @@
 const colors = {
   light: {
-    text: "#0A1A2F",
-    tint: "#047857",
+    text: "#0F172A",
+    tint: "#2563EB",
 
-    background: "#E5ECF4",
-    foreground: "#0A1A2F",
+    background: "#EEF2F8",
+    foreground: "#0F172A",
 
-    card: "#F4F7FB",
-    cardForeground: "#0A1A2F",
+    card: "#F7F9FC",
+    cardForeground: "#0F172A",
 
     elevated: "#FFFFFF",
 
-    primary: "#059669",
+    primary: "#2563EB",
     primaryForeground: "#FFFFFF",
 
-    secondary: "#DCE3ED",
-    secondaryForeground: "#0A1A2F",
+    secondary: "#DDE6F4",
+    secondaryForeground: "#0F172A",
 
-    muted: "#E0E7F0",
-    mutedForeground: "#566273",
+    muted: "#E4EAF3",
+    mutedForeground: "#64748B",
 
-    accent: "#D0EFDE",
-    accentForeground: "#047857",
+    accent: "#DBEAFE",
+    accentForeground: "#1D4ED8",
 
     success: "#059669",
     danger: "#DC2626",
@@ -31,39 +31,39 @@ const colors = {
     destructive: "#DC2626",
     destructiveForeground: "#FFFFFF",
 
-    border: "#C5CEDB",
-    input: "#C5CEDB",
+    border: "#CBD6E6",
+    input: "#CBD6E6",
 
-    chart1: "#059669",
-    chart2: "#2563EB",
-    chart3: "#D97706",
-    chart4: "#7C3AED",
-    chart5: "#DC2626",
+    chart1: "#2563EB",
+    chart2: "#0EA5E9",
+    chart3: "#7C3AED",
+    chart4: "#06B6D4",
+    chart5: "#F59E0B",
   },
 
   dark: {
-    text: "#EDF1F7",
-    tint: "#34D399",
+    text: "#EAF1FB",
+    tint: "#60A5FA",
 
-    background: "#070B11",
-    foreground: "#EDF1F7",
+    background: "#0B1220",
+    foreground: "#EAF1FB",
 
-    card: "#10161F",
-    cardForeground: "#EDF1F7",
+    card: "#121A2C",
+    cardForeground: "#EAF1FB",
 
-    elevated: "#171F2A",
+    elevated: "#172238",
 
-    primary: "#10B981",
-    primaryForeground: "#03110B",
+    primary: "#3B82F6",
+    primaryForeground: "#FFFFFF",
 
-    secondary: "#171F2A",
-    secondaryForeground: "#EDF1F7",
+    secondary: "#172238",
+    secondaryForeground: "#EAF1FB",
 
-    muted: "#131A24",
-    mutedForeground: "#9AA5B5",
+    muted: "#141C2D",
+    mutedForeground: "#94A3B8",
 
-    accent: "#0E2A20",
-    accentForeground: "#34D399",
+    accent: "#1E2D4A",
+    accentForeground: "#93C5FD",
 
     success: "#10B981",
     danger: "#F87171",
@@ -71,16 +71,16 @@ const colors = {
     info: "#60A5FA",
 
     destructive: "#F87171",
-    destructiveForeground: "#070B11",
+    destructiveForeground: "#0B1220",
 
-    border: "#222B38",
-    input: "#222B38",
+    border: "#243049",
+    input: "#243049",
 
-    chart1: "#10B981",
-    chart2: "#60A5FA",
-    chart3: "#FBBF24",
-    chart4: "#A78BFA",
-    chart5: "#F87171",
+    chart1: "#60A5FA",
+    chart2: "#22D3EE",
+    chart3: "#A78BFA",
+    chart4: "#34D399",
+    chart5: "#FBBF24",
   },
 
   radius: 16,

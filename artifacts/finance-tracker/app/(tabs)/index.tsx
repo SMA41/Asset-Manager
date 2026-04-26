@@ -18,16 +18,19 @@ import { EmptyState } from "@/components/EmptyState";
 import { BarChart, BarDatum } from "@/components/BarChart";
 import { LineChart, LinePoint } from "@/components/LineChart";
 import { CategoryBreakdown } from "@/components/CategoryBreakdown";
+import { ProBadge } from "@/components/ProBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useData } from "@/contexts/DataContext";
+import { usePlan } from "@/contexts/PlanContext";
 import { useColors } from "@/hooks/useColors";
 import { buildSnapshot } from "@/services/aiService";
 import { formatCurrency, monthKey, monthLabel } from "@/utils/format";
 
 export default function DashboardScreen() {
   const c = useColors();
-  const { user, logOut } = useAuth();
-  const { products, sales, expenses, budgets, loading } = useData();
+  const { user } = useAuth();
+  const { isPro } = usePlan();
+  const { products, sales, expenses, budgets, invoices, loading } = useData();
   const [refreshing, setRefreshing] = useState(false);
 
   const snap = useMemo(
@@ -58,6 +61,36 @@ export default function DashboardScreen() {
     return { last7Revenue: rev, last7Profit: prof };
   }, [sales, expenses]);
 
+  // Pro-only: advanced widgets data
+  const proWidgets = useMemo(() => {
+    // Top sellers all-time
+    const agg = new Map<string, { name: string; revenue: number; units: number }>();
+    for (const s of sales) {
+      const cur = agg.get(s.productId) ?? { name: s.productName, revenue: 0, units: 0 };
+      cur.revenue += s.revenue;
+      cur.units += s.quantity;
+      agg.set(s.productId, cur);
+    }
+    const topSellers = Array.from(agg.values()).sort((a, b) => b.revenue - a.revenue).slice(0, 3);
+
+    // Best margins
+    const margins = products
+      .map((p) => ({
+        name: p.name,
+        margin: p.sellingPrice > 0 ? ((p.sellingPrice - p.costPrice) / p.sellingPrice) * 100 : 0,
+      }))
+      .sort((a, b) => b.margin - a.margin)
+      .slice(0, 3);
+
+    // Outstanding invoices
+    const outstanding = invoices
+      .filter((i) => i.status !== "paid")
+      .reduce((a, i) => a + i.total, 0);
+    const overdueCount = invoices.filter((i) => i.status !== "paid" && i.dueDate < Date.now()).length;
+
+    return { topSellers, margins, outstanding, overdueCount };
+  }, [sales, products, invoices]);
+
   const greeting = useMemo(() => {
     const h = new Date().getHours();
     if (h < 12) return "Good morning";
@@ -77,8 +110,8 @@ export default function DashboardScreen() {
       <AppHeader
         title={user?.displayName || user?.email?.split("@")[0] || "Dashboard"}
         subtitle={`${greeting} — ${monthLabel(monthKey(new Date()))}`}
-        rightIcon="log-out"
-        onRightPress={() => logOut()}
+        rightIcon="message-circle"
+        onRightPress={() => router.push("/assistant")}
       />
       <ScrollView
         contentContainerStyle={styles.content}
@@ -205,6 +238,111 @@ export default function DashboardScreen() {
             </View>
           )}
         </View>
+
+        {/* Pro insights teaser / panel */}
+        {isPro ? (
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: c.card, borderColor: c.border, borderRadius: c.radius },
+            ]}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <SectionHeader
+                title="Pro insights"
+                subtitle="Top sellers, margins and pending money"
+                actionLabel="More"
+                actionIcon="arrow-right"
+                onAction={() => router.push("/analytics")}
+              />
+            </View>
+            <View style={{ flexDirection: "row", gap: 12, marginBottom: 12 }}>
+              <StatCard
+                label="Outstanding"
+                value={formatCurrency(proWidgets.outstanding)}
+                icon="clock"
+                tone={proWidgets.outstanding > 0 ? "warning" : "default"}
+                style={{ flex: 1 }}
+              />
+              <StatCard
+                label="Overdue"
+                value={String(proWidgets.overdueCount)}
+                icon="alert-triangle"
+                tone={proWidgets.overdueCount > 0 ? "negative" : "default"}
+                style={{ flex: 1 }}
+              />
+            </View>
+
+            <Text style={[styles.miniHeading, { color: c.mutedForeground }]}>TOP SELLERS</Text>
+            {proWidgets.topSellers.length === 0 ? (
+              <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", fontSize: 12, paddingVertical: 8 }}>
+                Record sales to see your bestsellers.
+              </Text>
+            ) : (
+              <View style={{ gap: 8, marginBottom: 12 }}>
+                {proWidgets.topSellers.map((p, i) => (
+                  <View key={i} style={styles.miniRow}>
+                    <Text style={{ color: c.foreground, fontFamily: "Inter_600SemiBold", fontSize: 13, flex: 1 }} numberOfLines={1}>
+                      {i + 1}. {p.name}
+                    </Text>
+                    <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", fontSize: 12 }}>
+                      {p.units} sold
+                    </Text>
+                    <Text style={{ color: c.foreground, fontFamily: "Inter_700Bold", fontSize: 13, marginLeft: 12 }}>
+                      {formatCurrency(p.revenue)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <Text style={[styles.miniHeading, { color: c.mutedForeground }]}>BEST MARGINS</Text>
+            {proWidgets.margins.length === 0 ? (
+              <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium", fontSize: 12, paddingVertical: 8 }}>
+                Add products to see margins.
+              </Text>
+            ) : (
+              <View style={{ gap: 8 }}>
+                {proWidgets.margins.map((m, i) => {
+                  const tone = m.margin >= 40 ? c.success : m.margin >= 20 ? c.warning : c.danger;
+                  return (
+                    <View key={i} style={styles.miniRow}>
+                      <Text style={{ color: c.foreground, fontFamily: "Inter_600SemiBold", fontSize: 13, flex: 1 }} numberOfLines={1}>
+                        {m.name}
+                      </Text>
+                      <Text style={{ color: tone, fontFamily: "Inter_700Bold", fontSize: 13 }}>
+                        {m.margin.toFixed(0)}%
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        ) : (
+          <Pressable onPress={() => router.push("/upgrade")}>
+            <View
+              style={[
+                styles.proTeaser,
+                { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+              ]}
+            >
+              <ProBadge size="md" />
+              <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 18, marginTop: 10, letterSpacing: -0.3 }}>
+                Unlock advanced insights
+              </Text>
+              <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4, lineHeight: 16 }}>
+                Customers, invoices, top sellers, profit margins, AI restock advice and bulk import.
+              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 12, gap: 6 }}>
+                <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 13 }}>
+                  See Pro features
+                </Text>
+                <Feather name="arrow-right" size={14} color={c.background} />
+              </View>
+            </View>
+          </Pressable>
+        )}
 
         {/* Budget */}
         <Pressable onPress={() => router.push("/budget")}>
@@ -336,7 +474,7 @@ export default function DashboardScreen() {
           <QuickAction
             label="AI report"
             icon="zap"
-            onPress={() => router.push("/(tabs)/assistant")}
+            onPress={() => router.push("/assistant")}
             highlight
           />
         </View>
@@ -435,6 +573,21 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     gap: 4,
+  },
+  proTeaser: {
+    padding: 20,
+    gap: 4,
+  },
+  miniHeading: {
+    fontFamily: "Inter_700Bold",
+    fontSize: 11,
+    letterSpacing: 1.2,
+    marginTop: 4,
+    marginBottom: 6,
+  },
+  miniRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   progressWrap: { gap: 8, marginTop: 4 },
   progressTrack: {

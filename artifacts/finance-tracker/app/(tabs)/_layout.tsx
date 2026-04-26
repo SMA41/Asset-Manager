@@ -27,9 +27,9 @@ function NativeTabLayout() {
         <Icon sf={{ default: "creditcard", selected: "creditcard.fill" }} />
         <Label>Expenses</Label>
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="assistant">
+      <NativeTabs.Trigger name="pro">
         <Icon sf={{ default: "sparkles", selected: "sparkles" }} />
-        <Label>Assistant</Label>
+        <Label>Pro</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
@@ -106,9 +106,9 @@ function ClassicTabLayout() {
         }}
       />
       <Tabs.Screen
-        name="assistant"
+        name="pro"
         options={{
-          title: "Assistant",
+          title: "Pro",
           tabBarIcon: ({ color }) => <Feather name="zap" size={22} color={color} />,
         }}
       />

@@ -5,8 +5,10 @@ import {
   subscribeExpenses,
   subscribeBudgets,
   subscribeReports,
+  subscribeCustomers,
+  subscribeInvoices,
 } from "@/services/firebaseService";
-import { Product, Sale, Expense, Budget, AIReport } from "@/types";
+import { Product, Sale, Expense, Budget, AIReport, Customer, Invoice } from "@/types";
 import { useAuth } from "./AuthContext";
 
 type DataContextValue = {
@@ -15,6 +17,8 @@ type DataContextValue = {
   expenses: Expense[];
   budgets: Budget[];
   reports: AIReport[];
+  customers: Customer[];
+  invoices: Invoice[];
   loading: boolean;
 };
 
@@ -27,6 +31,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [reports, setReports] = useState<AIReport[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,13 +42,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setExpenses([]);
       setBudgets([]);
       setReports([]);
+      setCustomers([]);
+      setInvoices([]);
       setLoading(false);
       return;
     }
 
     setLoading(true);
     let resolved = 0;
-    const total = 5;
+    const total = 7;
     const onResolved = () => {
       resolved += 1;
       if (resolved >= total) setLoading(false);
@@ -68,6 +76,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setReports(v);
       onResolved();
     });
+    const u6 = subscribeCustomers(user.uid, (v) => {
+      setCustomers(v);
+      onResolved();
+    });
+    const u7 = subscribeInvoices(user.uid, (v) => {
+      setInvoices(v);
+      onResolved();
+    });
 
     return () => {
       u1();
@@ -75,12 +91,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       u3();
       u4();
       u5();
+      u6();
+      u7();
     };
   }, [user]);
 
   const value = useMemo(
-    () => ({ products, sales, expenses, budgets, reports, loading }),
-    [products, sales, expenses, budgets, reports, loading]
+    () => ({ products, sales, expenses, budgets, reports, customers, invoices, loading }),
+    [products, sales, expenses, budgets, reports, customers, invoices, loading]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

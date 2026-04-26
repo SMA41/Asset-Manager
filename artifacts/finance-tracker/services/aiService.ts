@@ -1,5 +1,5 @@
 import { Product, Sale, Expense, Budget } from "@/types";
-import { formatCurrency, monthKey } from "@/utils/format";
+import { formatCurrency, formatDate, monthKey } from "@/utils/format";
 
 const MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
 
@@ -259,4 +259,62 @@ LIVE SNAPSHOT:
 ${snapshotToText(args.snapshot)}`;
 
   return geminiCall(args.userMessage, args.history, system);
+}
+
+export async function generateRestockSuggestions(args: {
+  products: Product[];
+  sales: Sale[];
+}): Promise<string> {
+  const horizonStart = Date.now() - 60 * 86400000;
+  const recentSales = args.sales.filter((s) => s.date >= horizonStart);
+  const stats = new Map<string, { name: string; soldUnits: number; revenue: number; stock: number; sellingPrice: number }>();
+  for (const p of args.products) {
+    stats.set(p.id, { name: p.name, soldUnits: 0, revenue: 0, stock: p.stock, sellingPrice: p.sellingPrice });
+  }
+  for (const s of recentSales) {
+    const cur = stats.get(s.productId);
+    if (cur) {
+      cur.soldUnits += s.quantity;
+      cur.revenue += s.revenue;
+    }
+  }
+  const lines = Array.from(stats.values())
+    .sort((a, b) => b.soldUnits - a.soldUnits)
+    .slice(0, 12)
+    .map(
+      (p) =>
+        ` - ${p.name}: ${p.soldUnits} sold last 60d, ${formatCurrency(p.revenue)} revenue, ${p.stock} in stock @ ${formatCurrency(p.sellingPrice)}`
+    );
+
+  const system = `You are a smart inventory advisor for a small business owner.
+Reply in plain text only — no markdown, no asterisks, no headings.
+Recommend which products to restock first, in priority order. For each pick, give: product name, suggested order quantity, and a one-line reason.
+Use 4 to 7 short numbered items (1., 2., …). Be concrete and use the numbers in the data.
+End with one warm sentence of overall guidance.`;
+
+  const prompt = `Last 60 days of product activity:\n\n${lines.join("\n") || "(no data)"}\n\nWrite the restock plan now.`;
+  return geminiCall(prompt, undefined, system);
+}
+
+export async function generatePaymentReminder(args: {
+  customerName: string;
+  invoiceNumber: string;
+  amount: number;
+  dueDate: number;
+  daysLate: number;
+}): Promise<string> {
+  const system = `You write polite, friendly payment reminders for small business owners.
+Reply in plain text only — no markdown, no asterisks, no headings.
+Write a short message (4 to 6 sentences) that is professional, warm, and not pushy.
+Reference the invoice number, amount and due date. Offer to help if there's any issue.
+Sign off with a placeholder name like "the team".`;
+
+  const prompt = `Customer: ${args.customerName || "the customer"}
+Invoice number: ${args.invoiceNumber}
+Amount due: ${formatCurrency(args.amount)}
+Due date: ${formatDate(args.dueDate)}
+Days late: ${args.daysLate}
+
+Write the reminder.`;
+  return geminiCall(prompt, undefined, system);
 }

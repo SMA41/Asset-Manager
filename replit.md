@@ -29,10 +29,11 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 ## Artifacts
 
 ### `finance-tracker` — AI Finance Tracker (Expo, mobile + web)
-Production-style mobile finance app for small business owners.
-- **Stack**: Expo SDK 54, expo-router (typed routes), TypeScript, react-native-svg, Firebase JS SDK (Auth + Firestore), Gemini 2.0 Flash via REST.
-- **Features**: email/password auth, products CRUD with stock, sales (atomic Firestore transaction decrements stock + records profit), expenses with categories and per-month filtering, monthly budget with overspend warnings, dashboard with revenue chart + category breakdown + top products, AI chat assistant grounded on a live finance snapshot, AI-generated month-end reports persisted to Firestore.
-- **Theme**: dark + light, fintech aesthetic (Coinbase/Robinhood-inspired) with emerald primary.
-- **Navigation**: bottom tabs (Overview, Products, Sales, Expenses, Assistant). Auth gate redirects between `(auth)` and `(tabs)` based on Firebase auth state.
-- **Env vars** (all `EXPO_PUBLIC_*` so they're inlined at build time): Firebase web config (`API_KEY`, `AUTH_DOMAIN`, `PROJECT_ID`, `STORAGE_BUCKET`, `MESSAGING_SENDER_ID`, `APP_ID`, `MEASUREMENT_ID`) + `EXPO_PUBLIC_AI_API_KEY` for Gemini.
-- **Firestore layout**: `users/{uid}/{products|sales|expenses|budgets|ai_reports|ai_chat}`.
+Production-style mobile finance app for small business owners with a free + Pro plan.
+- **Stack**: Expo SDK 54, expo-router (typed routes), TypeScript, react-native-svg, Firebase JS SDK (Auth + Firestore), Gemini via REST.
+- **Free features**: email/password auth, products CRUD with stock, sales (atomic Firestore transaction decrements stock + records profit), expenses with categories and per-month filtering, monthly budget with overspend warnings, dashboard with revenue chart + category breakdown + top products, AI chat assistant grounded on a live finance snapshot, AI-generated month-end reports persisted to Firestore.
+- **Pro features** (`PlanContext` toggle): customer manager, invoice generator with line items / tax / due dates, pending payments tracking, AI payment reminders, advanced analytics (top sellers, 6-month trends, profit margins per product), AI restock advisor, bulk product import (paste CSV format), Pro-gated dashboard insights panel.
+- **Theme**: modern blue palette (light primary `#2563EB`, dark navy `#0B1220` with primary `#3B82F6`). Charts use blue/sky/violet/cyan/amber.
+- **Navigation**: 5 bottom tabs (Overview, Products, Sales, Expenses, Pro). Pro tab is the upgrade hub + feature launcher. Assistant lives at `/assistant` (top-level route, accessible from dashboard header + Pro tab + AI report quick action). Auth gate redirects between `(auth)` and `(tabs)` based on Firebase auth state.
+- **Env vars** (all `EXPO_PUBLIC_*`): Firebase web config + `EXPO_PUBLIC_AI_API_KEY` for Gemini.
+- **Firestore layout**: `users/{uid}/{products|sales|expenses|budgets|ai_reports|ai_chat|customers|invoices|profile}`. Plan stored at `users/{uid}/profile/info` with `{plan: "free"|"pro", upgradedAt}`.
