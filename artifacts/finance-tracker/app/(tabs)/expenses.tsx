@@ -265,12 +265,20 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tab: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    minHeight: 38,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 999,
     borderWidth: 1,
   },
-  tabText: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
+  tabText: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 13,
+    lineHeight: 16,
+    includeFontPadding: false,
+  },
   list: { padding: 20, paddingTop: 4, paddingBottom: 140, flexGrow: 1 },
   statsRow: { flexDirection: "row", gap: 12 },
   warning: {
