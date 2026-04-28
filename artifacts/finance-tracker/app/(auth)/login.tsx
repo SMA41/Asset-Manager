@@ -44,52 +44,54 @@ export default function LoginScreen() {
       contentContainerStyle={styles.container}
       bottomOffset={20}
     >
-      <View style={styles.brand}>
-        <Image
-          source={require("@/assets/images/icon.png")}
-          style={{ width: 64, height: 64, borderRadius: 16 }}
-        />
-        <Text style={[styles.h1, { color: c.foreground }]}>Welcome back</Text>
-        <Text style={[styles.h2, { color: c.mutedForeground }]}>
-          Sign in to your AI accountant
-        </Text>
-      </View>
+      <View style={styles.inner}>
+        <View style={styles.brand}>
+          <Image
+            source={require("@/assets/images/icon.png")}
+            style={{ width: 64, height: 64, borderRadius: 16 }}
+          />
+          <Text style={[styles.h1, { color: c.foreground }]}>Welcome back</Text>
+          <Text style={[styles.h2, { color: c.mutedForeground }]}>
+            Sign in to your AI accountant
+          </Text>
+        </View>
 
-      <View style={{ gap: 14 }}>
-        <Input
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoComplete="email"
-          textContentType="emailAddress"
-          placeholder="you@example.com"
-        />
-        <Input
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoComplete="password"
-          textContentType="password"
-          placeholder="••••••••"
-          error={error}
-        />
-        <Button label="Sign in" onPress={submit} loading={busy} />
-      </View>
+        <View style={{ gap: 14 }}>
+          <Input
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            autoComplete="email"
+            textContentType="emailAddress"
+            placeholder="you@example.com"
+          />
+          <Input
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            autoComplete="password"
+            textContentType="password"
+            placeholder="••••••••"
+            error={error}
+          />
+          <Button label="Sign in" onPress={submit} loading={busy} />
+        </View>
 
-      <View style={styles.footer}>
-        <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium" }}>
-          New here?{" "}
-        </Text>
-        <Link href="/(auth)/register" asChild>
-          <Pressable>
-            <Text style={{ color: c.primary, fontFamily: "Inter_700Bold" }}>
-              Create an account
-            </Text>
-          </Pressable>
-        </Link>
+        <View style={styles.footer}>
+          <Text style={{ color: c.mutedForeground, fontFamily: "Inter_500Medium" }}>
+            New here?{" "}
+          </Text>
+          <Link href="/(auth)/register" asChild>
+            <Pressable>
+              <Text style={{ color: c.primary, fontFamily: "Inter_700Bold" }}>
+                Create an account
+              </Text>
+            </Pressable>
+          </Link>
+        </View>
       </View>
     </KeyboardAwareScrollViewCompat>
   );
@@ -111,7 +113,14 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 24,
-    paddingTop: 80,
+    paddingTop: 60,
+    paddingBottom: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inner: {
+    width: "100%",
+    maxWidth: 420,
     gap: 32,
   },
   brand: { gap: 8, alignItems: "flex-start" },

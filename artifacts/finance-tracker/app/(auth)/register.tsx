@@ -39,6 +39,7 @@ export default function RegisterScreen() {
       contentContainerStyle={styles.container}
       bottomOffset={20}
     >
+      <View style={styles.inner}>
       <View style={styles.brand}>
         <Image
           source={require("@/assets/images/icon.png")}
@@ -91,6 +92,7 @@ export default function RegisterScreen() {
           </Pressable>
         </Link>
       </View>
+      </View>
     </KeyboardAwareScrollViewCompat>
   );
 }
@@ -100,6 +102,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 24,
     paddingTop: 60,
+    paddingBottom: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inner: {
+    width: "100%",
+    maxWidth: 420,
     gap: 28,
   },
   brand: { gap: 8, alignItems: "flex-start" },
