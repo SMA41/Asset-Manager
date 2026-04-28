@@ -3,13 +3,13 @@ const colors = {
     text: "#0F172A",
     tint: "#2563EB",
 
-    background: "#E8EFFB",
+    background: "#EEF2F8",
     foreground: "#0F172A",
 
-    card: "#DDE7F7",
+    card: "#F7F9FC",
     cardForeground: "#0F172A",
 
-    elevated: "#EAF1FB",
+    elevated: "#FFFFFF",
 
     heroBg: "#0F172A",
     heroForeground: "#FFFFFF",
