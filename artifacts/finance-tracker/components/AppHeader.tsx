@@ -2,6 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useColors } from "@/hooks/useColors";
 
 export function AppHeader({
@@ -12,6 +13,8 @@ export function AppHeader({
   rightLabel,
   secondaryIcon,
   onSecondaryPress,
+  showBack,
+  onBackPress,
 }: {
   title: string;
   subtitle?: string;
@@ -20,10 +23,24 @@ export function AppHeader({
   rightLabel?: string;
   secondaryIcon?: keyof typeof Feather.glyphMap;
   onSecondaryPress?: () => void;
+  showBack?: boolean;
+  onBackPress?: () => void;
 }) {
   const c = useColors();
   const insets = useSafeAreaInsets();
   const topPad = Math.max(insets.top, 8);
+
+  const handleBack = () => {
+    if (onBackPress) {
+      onBackPress();
+      return;
+    }
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)");
+    }
+  };
 
   return (
     <View
@@ -35,6 +52,24 @@ export function AppHeader({
         },
       ]}
     >
+      {showBack ? (
+        <Pressable
+          onPress={handleBack}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={8}
+          style={({ pressed }) => [
+            styles.iconBtn,
+            {
+              backgroundColor: c.muted,
+              borderColor: c.border,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
+        >
+          <Feather name="chevron-left" size={20} color={c.foreground} />
+        </Pressable>
+      ) : null}
       <View style={{ flex: 1 }}>
         {subtitle ? (
           <Text style={[styles.subtitle, { color: c.mutedForeground }]}>

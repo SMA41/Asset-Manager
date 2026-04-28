@@ -50,15 +50,19 @@ function ClassicTabLayout() {
         headerShown: false,
         tabBarLabelStyle: {
           fontFamily: "Inter_600SemiBold",
-          fontSize: 10,
+          fontSize: 11,
+          marginTop: 2,
         },
+        tabBarItemStyle: isWeb
+          ? { paddingTop: 10, paddingBottom: 8 }
+          : undefined,
         tabBarStyle: {
           position: "absolute",
           backgroundColor: isIOS ? "transparent" : colors.background,
           borderTopWidth: isWeb ? 1 : 0.5,
           borderTopColor: colors.border,
           elevation: 0,
-          ...(isWeb ? { height: 84 } : {}),
+          ...(isWeb ? { height: 72 } : {}),
         },
         tabBarBackground: () =>
           isIOS ? (

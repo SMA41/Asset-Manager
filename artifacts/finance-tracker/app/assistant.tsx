@@ -136,6 +136,7 @@ export default function AssistantScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
       <AppHeader
+        showBack
         title="Assistant"
         subtitle="Your AI accountant"
         rightIcon={tab === "chat" ? "trash-2" : "refresh-cw"}
@@ -260,7 +261,7 @@ export default function AssistantScreen() {
               {
                 backgroundColor: c.background,
                 borderTopColor: c.border,
-                paddingBottom: Math.max(insets.bottom, 12) + 60,
+                paddingBottom: Math.max(insets.bottom, 12),
               },
             ]}
           >
