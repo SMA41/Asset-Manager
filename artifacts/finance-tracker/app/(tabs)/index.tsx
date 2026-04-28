@@ -125,28 +125,28 @@ export default function DashboardScreen() {
           style={[
             styles.hero,
             {
-              backgroundColor: c.foreground,
+              backgroundColor: c.heroBg,
               borderRadius: c.radius + 4,
             },
           ]}
         >
-          <Text style={[styles.heroLabel, { color: c.background }]}>Net profit this month</Text>
-          <Text style={[styles.heroValue, { color: c.background }]}>
+          <Text style={[styles.heroLabel, { color: c.heroForeground }]}>Net profit this month</Text>
+          <Text style={[styles.heroValue, { color: c.heroForeground }]}>
             {formatCurrency(snap.profit)}
           </Text>
           <View style={styles.heroRow}>
             <View style={styles.heroItem}>
               <View style={[styles.dot, { backgroundColor: c.success }]} />
-              <Text style={[styles.heroSubLabel, { color: c.background }]}>Revenue</Text>
-              <Text style={[styles.heroSubValue, { color: c.background }]}>
+              <Text style={[styles.heroSubLabel, { color: c.heroForeground }]}>Revenue</Text>
+              <Text style={[styles.heroSubValue, { color: c.heroForeground }]}>
                 {formatCurrency(snap.revenue)}
               </Text>
             </View>
             <View style={styles.heroDivider} />
             <View style={styles.heroItem}>
               <View style={[styles.dot, { backgroundColor: c.danger }]} />
-              <Text style={[styles.heroSubLabel, { color: c.background }]}>Expenses</Text>
-              <Text style={[styles.heroSubValue, { color: c.background }]}>
+              <Text style={[styles.heroSubLabel, { color: c.heroForeground }]}>Expenses</Text>
+              <Text style={[styles.heroSubValue, { color: c.heroForeground }]}>
                 {formatCurrency(snap.expenses + snap.cogs)}
               </Text>
             </View>
@@ -324,18 +324,18 @@ export default function DashboardScreen() {
             <View
               style={[
                 styles.proTeaser,
-                { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+                { backgroundColor: c.heroBg, borderRadius: c.radius + 4 },
               ]}
             >
               <ProBadge size="md" />
-              <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 18, marginTop: 10, letterSpacing: -0.3 }}>
+              <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 18, marginTop: 10, letterSpacing: -0.3 }}>
                 Unlock advanced insights
               </Text>
-              <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4, lineHeight: 16 }}>
+              <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4, lineHeight: 16 }}>
                 Customers, invoices, top sellers, profit margins, AI restock advice and bulk import.
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 12, gap: 6 }}>
-                <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 13 }}>
+                <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 13 }}>
                   See Pro features
                 </Text>
                 <Feather name="arrow-right" size={14} color={c.background} />

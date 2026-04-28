@@ -11,6 +11,9 @@ const colors = {
 
     elevated: "#EAF1FB",
 
+    heroBg: "#0F172A",
+    heroForeground: "#FFFFFF",
+
     primary: "#2563EB",
     primaryForeground: "#FFFFFF",
 
@@ -52,6 +55,9 @@ const colors = {
     cardForeground: "#EAF1FB",
 
     elevated: "#172238",
+
+    heroBg: "#1E3A8A",
+    heroForeground: "#FFFFFF",
 
     primary: "#3B82F6",
     primaryForeground: "#FFFFFF",

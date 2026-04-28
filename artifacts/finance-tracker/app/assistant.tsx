@@ -317,16 +317,16 @@ export default function AssistantScreen() {
           <View
             style={[
               styles.heroReport,
-              { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+              { backgroundColor: c.heroBg, borderRadius: c.radius + 4 },
             ]}
           >
-            <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13 }}>
               Generate a fresh month-end report
             </Text>
-            <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 22, marginTop: 6 }}>
+            <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 22, marginTop: 6 }}>
               Profit so far: {formatCurrency(snapshot.profit)}
             </Text>
-            <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4 }}>
               Revenue {formatCurrency(snapshot.revenue)} · Expenses {formatCurrency(snapshot.expenses + snapshot.cogs)}
             </Text>
             <View style={{ marginTop: 16 }}>

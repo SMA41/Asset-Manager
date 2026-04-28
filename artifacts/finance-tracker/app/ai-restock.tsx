@@ -60,16 +60,16 @@ export default function AIRestockScreen() {
         <View
           style={[
             styles.hero,
-            { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+            { backgroundColor: c.heroBg, borderRadius: c.radius + 4 },
           ]}
         >
           <View style={[styles.iconLg, { backgroundColor: c.primary }]}>
             <Feather name="shopping-bag" size={22} color={c.primaryForeground} />
           </View>
-          <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 22, letterSpacing: -0.5, marginTop: 14 }}>
+          <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 22, letterSpacing: -0.5, marginTop: 14 }}>
             Should I buy more?
           </Text>
-          <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 6, lineHeight: 18 }}>
+          <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 6, lineHeight: 18 }}>
             The AI weighs your last 60 days of sales against current stock, then ranks what to restock first.
           </Text>
           <View style={{ marginTop: 16 }}>

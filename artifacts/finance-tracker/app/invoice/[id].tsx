@@ -226,21 +226,21 @@ export default function InvoiceEditScreen() {
             style={[
               styles.summary,
               {
-                backgroundColor: c.foreground,
+                backgroundColor: c.heroBg,
                 borderRadius: c.radius + 4,
               },
             ]}
           >
-            <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 12 }}>
               {existing.number}
             </Text>
-            <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 32, letterSpacing: -0.6, marginTop: 2 }}>
+            <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 32, letterSpacing: -0.6, marginTop: 2 }}>
               {formatCurrency(existing.total)}
             </Text>
-            <Text style={{ color: c.background, opacity: 0.8, fontFamily: "Inter_600SemiBold", fontSize: 13, marginTop: 8 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.8, fontFamily: "Inter_600SemiBold", fontSize: 13, marginTop: 8 }}>
               {existing.customerName}
             </Text>
-            <Text style={{ color: c.background, opacity: 0.6, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 2 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.6, fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 2 }}>
               {isPaid
                 ? `Paid ${existing.paidAt ? formatDate(existing.paidAt) : ""}`
                 : overdue

@@ -128,8 +128,8 @@ export default function ExpensesScreen() {
               style={({ pressed }) => [
                 styles.tab,
                 {
-                  backgroundColor: active ? c.foreground : c.card,
-                  borderColor: active ? c.foreground : c.border,
+                  backgroundColor: active ? c.heroBg : c.card,
+                  borderColor: active ? c.heroBg : c.border,
                   opacity: pressed ? 0.8 : 1,
                 },
               ]}
@@ -137,7 +137,7 @@ export default function ExpensesScreen() {
               <Text
                 style={[
                   styles.tabText,
-                  { color: active ? c.background : c.foreground },
+                  { color: active ? c.heroForeground : c.foreground },
                 ]}
               >
                 {monthLabel(m)}

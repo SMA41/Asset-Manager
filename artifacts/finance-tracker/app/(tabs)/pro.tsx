@@ -109,19 +109,19 @@ export default function ProHubScreen() {
         <View
           style={[
             styles.hero,
-            { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+            { backgroundColor: c.heroBg, borderRadius: c.radius + 4 },
           ]}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_600SemiBold", fontSize: 12, letterSpacing: 1.2 }}>
+            <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_600SemiBold", fontSize: 12, letterSpacing: 1.2 }}>
               {isPro ? "PRO PLAN" : "FREE PLAN"}
             </Text>
             {isPro && <ProBadge size="sm" />}
           </View>
-          <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 26, letterSpacing: -0.5, marginTop: 6 }}>
+          <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 26, letterSpacing: -0.5, marginTop: 6 }}>
             {isPro ? "All features unlocked" : "Grow with Pro"}
           </Text>
-          <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 6, lineHeight: 18 }}>
+          <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 6, lineHeight: 18 }}>
             {isPro
               ? "Customers, invoices, advanced analytics and AI suggestions are all available."
               : "Customers, invoices, AI restock advice, advanced charts and bulk import — one upgrade unlocks them all."}

@@ -11,7 +11,7 @@ export function ProBadge({ size = "sm", style }: { size?: "sm" | "md"; style?: V
       style={[
         styles.wrap,
         {
-          backgroundColor: c.foreground,
+          backgroundColor: c.heroBg,
           paddingHorizontal: isMd ? 10 : 7,
           paddingVertical: isMd ? 4 : 2,
         },
@@ -21,7 +21,7 @@ export function ProBadge({ size = "sm", style }: { size?: "sm" | "md"; style?: V
       <Feather name="zap" size={isMd ? 12 : 10} color={c.background} />
       <Text
         style={{
-          color: c.background,
+          color: c.heroForeground,
           fontFamily: "Inter_700Bold",
           fontSize: isMd ? 11 : 10,
           letterSpacing: 0.6,

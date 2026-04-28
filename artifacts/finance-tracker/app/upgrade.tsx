@@ -56,14 +56,14 @@ export default function UpgradeScreen() {
         <View
           style={[
             styles.hero,
-            { backgroundColor: c.foreground, borderRadius: c.radius + 4 },
+            { backgroundColor: c.heroBg, borderRadius: c.radius + 4 },
           ]}
         >
           <ProBadge size="md" />
-          <Text style={{ color: c.background, fontFamily: "Inter_700Bold", fontSize: 30, letterSpacing: -0.6, marginTop: 10 }}>
+          <Text style={{ color: c.heroForeground, fontFamily: "Inter_700Bold", fontSize: 30, letterSpacing: -0.6, marginTop: 10 }}>
             $9 / month
           </Text>
-          <Text style={{ color: c.background, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 4 }}>
+          <Text style={{ color: c.heroForeground, opacity: 0.7, fontFamily: "Inter_500Medium", fontSize: 13, marginTop: 4 }}>
             Cancel anytime · Everything unlocked
           </Text>
         </View>

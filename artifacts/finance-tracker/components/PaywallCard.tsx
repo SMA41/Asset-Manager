@@ -19,7 +19,7 @@ export function PaywallCard({
       style={[
         styles.card,
         {
-          backgroundColor: c.foreground,
+          backgroundColor: c.heroBg,
           borderRadius: c.radius + 4,
         },
       ]}
@@ -27,9 +27,9 @@ export function PaywallCard({
       <View style={[styles.icon, { backgroundColor: c.primary }]}>
         <Feather name="lock" size={22} color={c.primaryForeground} />
       </View>
-      <Text style={[styles.kicker, { color: c.background, opacity: 0.6 }]}>PRO FEATURE</Text>
-      <Text style={[styles.title, { color: c.background }]}>{feature}</Text>
-      <Text style={[styles.body, { color: c.background, opacity: 0.75 }]}>
+      <Text style={[styles.kicker, { color: c.heroForeground, opacity: 0.6 }]}>PRO FEATURE</Text>
+      <Text style={[styles.title, { color: c.heroForeground }]}>{feature}</Text>
+      <Text style={[styles.body, { color: c.heroForeground, opacity: 0.75 }]}>
         {description}
       </Text>
       <View style={{ marginTop: 18 }}>
