@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { DataProvider } from "@/contexts/DataContext";
@@ -32,6 +33,7 @@ function ThemedShell() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       <AuthGate />
+      <ConfirmDialog />
     </View>
   );
 }
