@@ -56,7 +56,7 @@ const colors = {
 
     elevated: "#172238",
 
-    heroBg: "#1E3A8A",
+    heroBg: "#0F172A",
     heroForeground: "#FFFFFF",
 
     primary: "#3B82F6",
