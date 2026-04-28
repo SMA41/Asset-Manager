@@ -57,6 +57,16 @@ export default function RootLayout() {
     const style = document.createElement("style");
     style.id = id;
     style.innerHTML = `
+      input, textarea, select, button {
+        outline: none !important;
+        outline-offset: 0 !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      input:focus, textarea:focus, select:focus, button:focus,
+      input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+      }
       input:-webkit-autofill,
       input:-webkit-autofill:hover,
       input:-webkit-autofill:focus,
@@ -64,10 +74,20 @@ export default function RootLayout() {
       textarea:-webkit-autofill {
         -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
         box-shadow: 0 0 0 1000px transparent inset !important;
-        -webkit-text-fill-color: inherit !important;
-        caret-color: inherit !important;
+        -webkit-text-fill-color: #0F172A !important;
+        caret-color: #0F172A !important;
         transition: background-color 9999s ease-in-out 0s !important;
         background-color: transparent !important;
+      }
+      @media (prefers-color-scheme: dark) {
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active,
+        textarea:-webkit-autofill {
+          -webkit-text-fill-color: #EAF1FB !important;
+          caret-color: #EAF1FB !important;
+        }
       }
     `;
     document.head.appendChild(style);
